@@ -1,7 +1,8 @@
-In mysql-connector-j 9.2.0, the frank framework tests fail when updating a field in an updatable ResultSet.
+In `mysql-connector-j` version 9.2.0, the Frank!framework tests fail when updating a field in an updatable ResultSet. This might be related to the following commit:
+`Fix for Bug#71143 (Bug#17967091), Calling ResultSet.updateRow should not set all field values in UPDATE.` as mentioned in the [release notes](https://github.com/mysql/mysql-connector-j/blob/release/9.x/CHANGES).
 
-This repository sets up a simple scenario to reproduce this, by providing a mysql `docker-compose.yml` with the right structure in `init.sql`. When you start the version as committed, you'll see that 
-the unit test will work. This test is a representable scenario, similar to the situation in the frank framework. See the [ResultSet2FileSender](https://github.com/frankframework/frankframework/blob/master/core/src/main/java/org/frankframework/jdbc/ResultSet2FileSender.java#L95)
+This repository sets up a simple scenario to reproduce this, by providing a mysql `docker-compose.yml` with the right database structure in `init.sql`. When you start the version as committed, you'll see that 
+the `MysqlTestApplicationTests` unit test will work. This test is a representable scenario for the situation in the frank framework. See the [ResultSet2FileSender](https://github.com/frankframework/frankframework/blob/master/core/src/main/java/org/frankframework/jdbc/ResultSet2FileSender.java#L95)
 in the Frank!Framework github repository.
 
 If you umcomment the mysql-connector-j version in `pom.xml`, the unit test will fail. Somehow the number of parameters is calculated differently in 9.2.0 compared to 9.1.0, resulting in the following stacktrace:
