@@ -1,0 +1,41 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-8
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_password
+      MYSQL_PASSWORD: demo
+      MYSQL_DATABASE: demo
+      MYSQL_USER: demo
+    volumes:
+      - ./db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '3306:3306'
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 64M
+  app:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-mysql8
+    #restart: no
+    ports:
+      - '127.0.0.1:8090:80'
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 900M
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+        reservations:
+          memory: 64m
+volumes:
+  db-data:
+    driver: local
